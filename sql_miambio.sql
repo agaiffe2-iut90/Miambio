@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS est_présent,produit, période_de_vente, Vente, Récolte ,Produits , Semaine, Saison ,Catégorie_produit , Maraichers , Marchés;
+DROP TABLE IF EXISTS est_présent, produit, période_de_vente, Vente, Récolte ,Produits , Semaine, Saison ,Catégorie_produit , Maraichers , Marchés;
 CREATE TABLE Marchés(
    Id_Marché INT AUTO_INCREMENT,
    Date_marché DATE NOT NULL,
@@ -75,16 +75,14 @@ CREATE TABLE est_présent(
    FOREIGN KEY(Id_Maraicher) REFERENCES Maraichers(Id_Maraicher)
 );
 
-CREATE TABLE produit(
-   Id_Maraicher INT,
-   Id_produit INT,
-   Surface_cultivée INT,
-   PRIMARY KEY(Id_Maraicher, Id_produit),
-   FOREIGN KEY(Id_Maraicher) REFERENCES Maraichers(Id_Maraicher),
-   FOREIGN KEY(Id_produit) REFERENCES Produits(Id_produit)
-
+CREATE TABLE produit (
+    Id_Maraicher INT,
+    Id_produit INT,
+    Surface_cultivée INT,
+    PRIMARY KEY(Id_Maraicher, Id_produit),
+    FOREIGN KEY(Id_Maraicher) REFERENCES Maraichers(Id_Maraicher),
+    FOREIGN KEY(Id_produit) REFERENCES Produits(Id_produit)
 );
-
 CREATE TABLE période_de_vente(
    Id_produit INT,
    Id_saison INT,
@@ -146,7 +144,7 @@ INSERT INTO est_présent (Id_Marché, Id_Maraicher) VALUES
 (2, 2),
 (3, 3);
 
-INSERT INTO production (Id_Maraicher, Id_produit) VALUES
+INSERT INTO produit (Id_Maraicher, Id_produit) VALUES
 (1, 1),
 (2, 2),
 (3, 3);
