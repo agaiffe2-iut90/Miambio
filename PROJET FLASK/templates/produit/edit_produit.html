@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>ajouter un produit</title>
+{% endblock %}
+
+{% block body %}
+  <h2>modifier un produit</h2>
+  <form method="post" action="/produit/edit" >
+    <fieldset>
+        <legend> modifier un  produit</legend>
+        <input type="hidden" name="id" size="18" value="" id="id">
+        
+        
+        <label for="nomproduit">nomproduit</label><br>
+        <select name="nomproduit" required>
+          <option value="1"> Paris SG </option>
+          <option value="2"> Chelsea </option>
+          <option value="3"selected>FC Barcelona </option>
+          </select><br> 
+            
+           
+
+        <label for="villeproduit">villeproduit</label><br>
+        <input type="text" name="villeproduit" size="18" value="" id="villeproduit"><br>
+        <label for="image">image</label><br>
+        <input type="text" name="image" size="18" value="" id="image"><br>
+        <input type="submit" value="modifier" name="modifier" >
+    </fieldset>
+  </form>
+{% endblock %}

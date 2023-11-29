@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>ajouter un produit</title>
+{% endblock %}
+
+{% block body %}
+  <h2>ajout d'un produit</h2>
+  <form method="post" action="/produit/add" >
+    <fieldset>
+        <legend> Créer un nouveau produit</legend>
+        <input type="hidden" name="id" size="18" value="" id="id">
+        <label for="nomproduit">nomproduit</label><br>
+        <input type="text" name="nomproduit" size="18" value="" id="nomproduit"><br>
+        <label for="indiceglycémiqueproduit">indiceglycémiqueproduit</label><br>
+        <input type="text" name="indiceglycémiqueproduit" size="18" value="" id="indiceglycémiqueproduit"><br>
+        <label for="image">image</label><br>
+        <input type="text" name="image" size="18" value="" id="image"><br>
+        <input type="submit" value="Creer" name="Valider" >
+    </fieldset>
+  </form>
+{% endblock %}
