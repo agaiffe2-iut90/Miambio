@@ -162,6 +162,115 @@ def valid_add_production():
 
 
 
+# ROUTES D'ANNA
+
+@app.route('/recolte/show')
+def show_recolte():
+    mycursor = get_db().cursor()
+    sql='''
+ SELECT  Id_recolte AS id,  quantite_recoltee AS qtRecolte, Id_Semaine AS semaine, Id_produit AS id_produit, Id_Maraicher AS id_maraicher
+ FROM recolte
+    ORDER BY id;
+    '''
+    mycursor.execute(sql)
+    recoltes = mycursor.fetchall()
+    return render_template('recolte/show_recolte.html', recoltes=recoltes)
+
+@app.route('/recolte/add', methods=['GET'])
+def add_recolte():
+    print('''affichage du formulaire pour saisir une récolte''')
+    mycursor = get_db().cursor()
+    sql='''SELECT * FROM Semaine
+    '''
+    mycursor.execute(sql)
+    semaines = mycursor.fetchall()
+
+    sql='''SELECT * FROM Produits '''
+    mycursor.execute(sql)
+    produits = mycursor.fetchall()
+
+    sql = '''SELECT * FROM Maraichers '''
+    mycursor.execute(sql)
+    maraichers = mycursor.fetchall()
+
+    return render_template('recolte/add_recolte.html' , semaines=semaines , produits=produits , maraichers=maraichers)
+
+
+@app.route('/recolte/edit', methods=['GET'])
+def edit_recolte():
+    print('''Modifier une récolte''')
+    id=request.args.get('id')
+    mycursor = get_db().cursor()
+    sql=''' SELECT  Id_recolte AS id,  quantite_recoltee AS qtRecolte, Id_Semaine AS semaine, Id_produit AS id_produit, Id_Maraicher AS id_maraicher
+ FROM recolte
+    WHERE Id_Recolte=%s;'''
+    mycursor.execute(sql,id)
+    recolte = mycursor.fetchone()
+
+    mycursor = get_db().cursor()
+    sql='''SELECT * FROM Semaine
+    '''
+    mycursor.execute(sql)
+    semaines = mycursor.fetchall()
+
+    sql='''SELECT * FROM Produits '''
+    mycursor.execute(sql)
+    produits = mycursor.fetchall()
+
+    sql = '''SELECT * FROM Maraichers '''
+    mycursor.execute(sql)
+    maraichers = mycursor.fetchall()
+    return render_template('recolte/edit_recolte.html', recolte=recolte , semaines=semaines , produits=produits , maraichers=maraichers)
+
+
+@app.route('/recolte/add', methods=['POST'])
+def valid_add_recolte():
+    print('''ajout de récolte dans le tableau''')
+    qtRecolte = request.form.get('qtRecolte')
+    semaine = request.form.get('Id_Semaine')
+    id_produit = request.form.get('Id_produit')
+    id_maraicher = request.form.get('Id_Maraicher')
+
+    message = ' - Quantité récoltée :' + qtRecolte + ' - semaine n° :' + semaine +' - produit n° :' + id_produit +' - récolté par :' + id_maraicher
+    print(message)
+    mycursor = get_db().cursor()
+    tuple_param=(qtRecolte,semaine,id_produit,id_maraicher)
+    sql="INSERT INTO recolte(Id_recolte, quantite_recoltee, Id_Semaine, Id_produit, Id_Maraicher) VALUES (NULL, %s, %s, %s, %s);"
+    mycursor.execute(sql,tuple_param)
+    get_db().commit()
+    return redirect('/recolte/show')
+
+@app.route('/recolte/edit', methods=['POST'])
+def valid_edit_recolte():
+    print('''modification de la récolte ''')
+    id = request.form.get('id')
+    qtRecolte = request.form.get('qtRecolte')
+    semaine = request.form.get('Id_Semaine')
+    id_produit = request.form.get('Id_produit')
+    id_maraicher = request.form.get('Id_Maraicher')
+    print(qtRecolte,semaine,id_produit,id_maraicher,id)
+
+
+    mycursor = get_db().cursor()
+    sql="UPDATE recolte SET quantite_recoltee = %s, Id_Semaine=%s,  Id_produit=%s, Id_Maraicher= %s WHERE Id_recolte=%s;"
+    mycursor.execute(sql,(qtRecolte,semaine,id_produit,id_maraicher,id))
+    get_db().commit()
+    return redirect('/recolte/show')
+
+@app.route('/recolte/delete' , methods=['GET'])
+def delete_recolte():
+    print('''suppression d'une récolte''')
+    id = request.args.get('id', 'heyyy')
+    mycursor = get_db().cursor()
+    sql = "DELETE FROM recolte WHERE Id_recolte=%s;"
+    mycursor.execute(sql, id)
+    get_db().commit()
+    print('La recolte avec le numéro '+id + 'a été supprimé')
+    return redirect('/recolte/show')
+
+
+
+
 
 
 
