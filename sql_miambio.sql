@@ -40,12 +40,12 @@ CREATE TABLE Produits(
 );
 
 CREATE TABLE recolte(
-   Id-recolte INT AUTO_INCREMENT,
+   Id_recolte INT AUTO_INCREMENT,
    quantite_recoltee INT,
    Id_Semaine INT NOT NULL,
    Id_produit INT NOT NULL,
    Id_Maraicher INT NOT NULL,
-   PRIMARY KEY(Id-recolte),
+   PRIMARY KEY(Id_recolte),
    FOREIGN KEY(Id_Semaine) REFERENCES Semaine(Id_Semaine),
    FOREIGN KEY(Id_produit) REFERENCES Produits(Id_produit),
    FOREIGN KEY(Id_Maraicher) REFERENCES Maraichers(Id_Maraicher)
@@ -129,7 +129,7 @@ INSERT INTO Produits (libelle_produit, Id_categorie_produit) VALUES
 ('Persil', 3);
 
 
-INSERT INTO recolte (Id-recolte, quantite_recoltee, Id_Semaine, Id_produit, Id_Maraicher) VALUES
+INSERT INTO recolte (Id_recolte, quantite_recoltee, Id_Semaine, Id_produit, Id_Maraicher) VALUES
 (1, 100, 1, 1, 1),
 (2, 150, 1, 2, 4),
 (3, 75, 2, 3, 3);
