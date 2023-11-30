@@ -67,6 +67,15 @@ def valid_edit_produit():
     flash(message, 'alert-success')
     return redirect('/produit/show')
 
+@app.route('/production/show')
+def show_etudiant():
+    mycursor = get_db().cursor()
+    sql='''SELECT Id_production AS id, surface_cultivee AS surface_cultivee
+    FROM production;'''
+    mycursor.execute(sql)
+    liste_production = mycursor.fetchall()
+    return render_template('production/show_production.html', production=liste_production)
+
 
 
 
