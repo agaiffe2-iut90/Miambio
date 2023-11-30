@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Ajouter une production</title>
+{% endblock %}
+
+{% block body %}
+    <h2 class="m-lg-2 display-4">Ajout d'une production</h2><br>
+    {% if error %}
+        <p class=error><strong>Error:</strong> {{ error }}
+    {% endif %}
+    <div class="container">
+        <form method="post" action="/production/add">
+            <fieldset>
+                <legend> Ajouter une production</legend>
+                <label class="form-label" for="Nom_maraicher">Maraicher</label><br>
+                <select class="form-select" name="Nom_maraicher" id="Nom_maraicher" required>
+                    <option value="" selected>Sélectionner un maraicher</option>
+                    {% for ligne in maraichers %}
+                        <option value="{{ ligne.Id_Maraicher }}"> {{ ligne.Nom_maraicher }} </option>
+                    {% endfor %}
+                </select><br>
+                <label class="form-label" for="Libellé_produit">Produit</label><br>
+                <select class="form-select" name="Libellé_produit" id="Libellé_produit" required>
+                    <option value="" selected>Sélectionner un produit</option>
+                    {% for ligne in produits %}
+                        <option value="{{ ligne.Id_produit }}"> {{ ligne.Libellé_produit }} </option>
+                    {% endfor %}
+                </select><br>
+                <label class="form-label" for="surface_cultivee">Surface cultivée:</label><br>
+                <input class="form-control" type="number" name="surface_cultivee" id="surface_cultivee" required><br>
+                <input class="btn btn-success" type="submit" value="Ajouter" name="Ajouter">
+            </fieldset>
+        </form>
+    </div>
+{% endblock %}
