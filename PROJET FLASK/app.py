@@ -76,6 +76,21 @@ def show_etudiant():
     liste_production = mycursor.fetchall()
     return render_template('production/show_production.html', production=liste_production)
 
+@app.route('/production/delete')
+def delete_etudiant():
+    print('''suppression d'une production''')
+    id = request.args.get('id', 0)
+    print(id)
+    mycursor = get_db().cursor()
+    tuple_param = (id,)
+    sql = "DELETE FROM production WHERE Id_production=%s;"
+    mycursor.execute(sql, tuple_param)
+    get_db().commit()
+    print(request.args)
+    print(request.args.get('id'))
+    id = request.args.get('id', 0)
+    return redirect('/production/show')
+
 
 
 
