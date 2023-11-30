@@ -40,12 +40,12 @@ CREATE TABLE Produits(
 );
 
 CREATE TABLE recolte(
-   Id_Récolte INT AUTO_INCREMENT,
+   Id-recolte INT AUTO_INCREMENT,
    quantite_recoltee INT,
    Id_Semaine INT NOT NULL,
    Id_produit INT NOT NULL,
    Id_Maraicher INT NOT NULL,
-   PRIMARY KEY(Id_Récolte),
+   PRIMARY KEY(Id-recolte),
    FOREIGN KEY(Id_Semaine) REFERENCES Semaine(Id_Semaine),
    FOREIGN KEY(Id_produit) REFERENCES Produits(Id_produit),
    FOREIGN KEY(Id_Maraicher) REFERENCES Maraichers(Id_Maraicher)
@@ -54,7 +54,7 @@ CREATE TABLE recolte(
 CREATE TABLE Vente(
    Id_Vente INT AUTO_INCREMENT,
    Prix_de_vente INT,
-   Quantitée_vendue INT,
+   Quantite_vendue INT,
    Prix_total_de_vente INT,
    Id_Semaine INT NOT NULL,
    Id_produit INT NOT NULL,
@@ -129,12 +129,12 @@ INSERT INTO Produits (libelle_produit, Id_categorie_produit) VALUES
 ('Persil', 3);
 
 
-INSERT INTO recolte (Id_Récolte, quantite_recoltee, Id_Semaine, Id_produit, Id_Maraicher) VALUES
+INSERT INTO recolte (Id-recolte, quantite_recoltee, Id_Semaine, Id_produit, Id_Maraicher) VALUES
 (1, 100, 1, 1, 1),
 (2, 150, 1, 2, 4),
 (3, 75, 2, 3, 3);
 
-INSERT INTO Vente (Prix_de_vente, Quantitée_vendue, Prix_total_de_vente, Id_Semaine, Id_produit, Id_marches, Id_Maraicher) VALUES
+INSERT INTO Vente (Prix_de_vente, Quantite_vendue, Prix_total_de_vente, Id_Semaine, Id_produit, Id_marches, Id_Maraicher) VALUES
 (2, 50, 100, 1, 1, 1, 1),
 (3, 100, 300, 1, 2, 2, 2),
 (1, 30, 30, 2, 3, 3, 3);
@@ -164,8 +164,8 @@ FROM marches
 INNER JOIN Vente ON marches.Id_marches = Vente.Id_marches
 GROUP BY marches.Lieu_du_marche;
 
--- récolte moyenne par produit
-SELECT Produits.libelle_produit, AVG(recolte.quantite_recoltee) AS Moyenne_récolte
+-- recolte moyenne par produit
+SELECT Produits.libelle_produit, AVG(recolte.quantite_recoltee) AS Moyenne_recolte
 FROM Produits
 INNER JOIN recolte ON Produits.Id_produit =recolte.Id_produit
 GROUP BY Produits.libelle_produit;
@@ -177,11 +177,11 @@ INNER JOIN periode_de_vente ON Saison.Id_saison = periode_de_vente.Id_saison
 INNER JOIN Vente ON periode_de_vente.Id_produit = Vente.Id_produit
 GROUP BY Saison.libelle_saison;
 
--- récoltes par maraîchers
+-- recoltes par maraîchers
 SELECT
     M.Nom_maraicher,
     R.Id_produit,
-    SUM(R.quantite_recoltee) AS Total_récolté,
+    SUM(R.quantite_recoltee) AS Total_recolte,
     V.Id_produit AS Produit_plus_vendu,
     COUNT(V.Id_produit) AS Nb_ventes_produit_plus_vendu
 FROM
