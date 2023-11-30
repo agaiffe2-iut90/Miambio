@@ -10,16 +10,16 @@
     {% if production | length >= 1 %}
         <table class="table table-dark table-striped">
         <tr>
-            <th>id</th><th>Surface cultivée</th>
+            <th>id</th><th>Surface cultivée</th><th>modifications</th>
         </tr>
         {% for ligne in production %}
             <tr>
                 <td>{{ ligne.id }}</td>
                 <td>{{ ligne.surface_cultivee }}</td>
-                <!--<td>
-                      <a href="/etudiant/edit?id={{ ligne.id }}">editer</a>
-                      <a href="/etudiant/delete?id={{ ligne.id }}" >supprimer</a>
-                  </td>-->
+                <td>
+                     <!--<a href="/etudiant/edit?id={{ ligne.id }}">editer</a>-->
+                      <a href="/production/delete?id={{ ligne.id }}" >supprimer</a>
+                  </td>
             </tr>
         {% endfor %}
     </table>
