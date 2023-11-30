@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Éditer une production</title>
+{% endblock %}
+
+{% block body %}
+    <h2 class="m-lg-2 display-4">Édition d'une production</h2><br>
+    {% if error %}
+        <p class="error"><strong>Error:</strong> {{ error }}</p>
+    {% endif %}
+    <div class="container">
+        <form method="post" action="/production/edit">
+            <fieldset>
+                <legend>Éditer une production</legend>
+                <label class="form-label" for="maraicher">Maraicher</label><br>
+                <select class="form-select" name="maraicher" id="maraicher" required>
+                    <option value="" selected>Sélectionner un maraicher</option>
+                    {% for maraicher in maraichers %}
+                        <option value="{{ maraicher.Id_maraicher }}">{{ maraicher.Nom_maraicher }}</option>
+                    {% endfor %}
+                </select><br>
+                <label class="form-label" for="maraicher">Maraicher</label><br>
+                <select class="form-select" name="maraicher" id="maraicher" required>
+                    <option value="" selected>Sélectionner un maraicher</option>
+                    {% for maraicher in maraichers %}
+                        <option value="{{ maraicher.Id_maraicher }}"
+                                {% if product_id is defined and maraicher.Id_maraicher == product_id %}selected{% endif %}>
+                            {{ maraicher.Nom_maraicher }}
+                        </option>
+                    {% endfor %}
+                </select><br>
+                <!-- Autres champs de formulaire pour l'édition -->
+                <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+            </fieldset>
+        </form>
+    </div>
+{% endblock %}
