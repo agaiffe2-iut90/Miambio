@@ -68,7 +68,7 @@ def valid_edit_produit():
     return redirect('/produit/show')
 
 @app.route('/production/show')
-def show_etudiant():
+def show_production():
     mycursor = get_db().cursor()
     sql='''SELECT Id_production AS id, surface_cultivee AS surface_cultivee
     FROM production;'''
@@ -91,7 +91,72 @@ def delete_etudiant():
     id = request.args.get('id', 0)
     return redirect('/production/show')
 
+@app.route('/production/show')
+def show_etudiant():
+    mycursor = get_db().cursor()
+    sql='''SELECT Id_production AS id, surface_cultivee AS surface_cultivee
+    FROM production;'''
+    mycursor.execute(sql)
+    liste_production = mycursor.fetchall()
+    return render_template('production/show_production.html', production=liste_production)
 
+@app.route('/production/edit', methods=['GET'])
+def edit_production():
+    # Récupérer la liste de tous les maraîchers
+    mycursor = get_db().cursor()
+    maraicher_sql = "SELECT Id_maraicher, Nom_maraicher FROM maraichers;"
+    mycursor.execute(maraicher_sql)
+    maraichers = mycursor.fetchall()
+
+    # Rendre le modèle en passant les données à utiliser dans le formulaire
+    return render_template('production/edit_production.html', maraichers=maraichers)
+
+@app.route('/production/delete')
+def delete_production():
+    print('''suppression d'une production''')
+    id = request.args.get('id', 0)
+    print(id)
+    mycursor = get_db().cursor()
+    tuple_param = (id,)
+    sql = "DELETE FROM production WHERE Id_production=%s;"
+    mycursor.execute(sql, tuple_param)
+    get_db().commit()
+    print(request.args)
+    print(request.args.get('id'))
+    id = request.args.get('id', 0)
+    return redirect('/production/show')
+
+@app.route('/production/add', methods=['GET'])
+def add_production():
+    print('''affichage du formulaire pour saisir une production''')
+    mycursor = get_db().cursor()
+    maraicher_sql = "SELECT Id_Maraicher, Nom_maraicher FROM maraichers;"
+    mycursor.execute(maraicher_sql)
+    maraichers = mycursor.fetchall()
+
+    produit_sql = "SELECT Id_produit, Libellé_produit FROM produits;"
+    mycursor.execute(produit_sql)
+    produits = mycursor.fetchall()
+    return render_template('production/add_production.html', maraichers=maraichers, produits=produits)
+
+@app.route('/production/add', methods=['POST'])
+def valid_add_production():
+    print('''ajout de la production dans le tableau''')
+    Nom_maraicher = request.form.get('Nom_maraicher')
+    Libellé_produit = request.form.get('produit')
+    surface_cultivee = request.form.get('surface_cultivee')
+    if Nom_maraicher is not None and Libellé_produit is not None and surface_cultivee is not None:
+        message = f'nom : {Nom_maraicher} - produit : {Libellé_produit} - surface cultivée : {surface_cultivee}'
+    else:
+        # Gérer le cas où l'une des valeurs est None
+        message = 'Erreur : l\'une des valeurs est manquante.'
+
+    mycursor = get_db().cursor()
+    tuple_param=(surface_cultivee, Nom_maraicher, Libellé_produit)
+    sql="INSERT INTO production(surface_cultivee, Id_maraicher, Id_produit) VALUES (%s, %s, %s);"
+    mycursor.execute(sql,tuple_param)
+    get_db().commit()
+    return redirect('/production/show')
 
 
 
