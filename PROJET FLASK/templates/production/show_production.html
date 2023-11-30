@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Les productions</title>
+{% endblock %}
+
+{% block body %}
+    <h1 class="text-center mt-5">Les productions</h1>
+    <hr class="barre opacity-100">
+    {% if production | length >= 1 %}
+        <table class="table table-dark table-striped">
+        <tr>
+            <th>id</th><th>Surface cultivée</th>
+        </tr>
+        {% for ligne in production %}
+            <tr>
+                <td>{{ ligne.id }}</td>
+                <td>{{ ligne.surface_cultivee }}</td>
+                <!--<td>
+                      <a href="/etudiant/edit?id={{ ligne.id }}">editer</a>
+                      <a href="/etudiant/delete?id={{ ligne.id }}" >supprimer</a>
+                  </td>-->
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h2> la liste des productions est vide</h2>
+{% endif %}
+{% endblock %}
