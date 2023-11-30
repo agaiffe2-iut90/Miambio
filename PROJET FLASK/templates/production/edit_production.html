@@ -1,38 +1,32 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    <title>Éditer une production</title>
+    <title>Modifier une production</title>
 {% endblock %}
 
 {% block body %}
-    <h2 class="m-lg-2 display-4">Édition d'une production</h2><br>
-    {% if error %}
-        <p class="error"><strong>Error:</strong> {{ error }}</p>
-    {% endif %}
-    <div class="container">
-        <form method="post" action="/production/edit">
-            <fieldset>
-                <legend>Éditer une production</legend>
-                <label class="form-label" for="maraicher">Maraicher</label><br>
-                <select class="form-select" name="maraicher" id="maraicher" required>
-                    <option value="" selected>Sélectionner un maraicher</option>
-                    {% for maraicher in maraichers %}
-                        <option value="{{ maraicher.Id_maraicher }}">{{ maraicher.Nom_maraicher }}</option>
-                    {% endfor %}
-                </select><br>
-                <label class="form-label" for="maraicher">Maraicher</label><br>
-                <select class="form-select" name="maraicher" id="maraicher" required>
-                    <option value="" selected>Sélectionner un maraicher</option>
-                    {% for maraicher in maraichers %}
-                        <option value="{{ maraicher.Id_maraicher }}"
-                                {% if product_id is defined and maraicher.Id_maraicher == product_id %}selected{% endif %}>
-                            {{ maraicher.Nom_maraicher }}
-                        </option>
-                    {% endfor %}
-                </select><br>
-                <!-- Autres champs de formulaire pour l'édition -->
-                <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-            </fieldset>
-        </form>
-    </div>
+    <h1 class="text-center mt-5">Modifier une production</h1>
+    <hr class="barre opacity-100">
+
+    <form method="post" action="/production/edit">
+        <input type="hidden" name="id" value="{{ production.id }}">
+        <label for="produit">Produit :</label>
+        <select name="produit" id="produit" required>
+            {% for produit in produits %}
+                <option value="{{ produit.Id_produit }}" {% if produit.Id_produit == production.Id_produit %}selected{% endif %}>{{ produit.Libellé_produit }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="maraicher">Maraîcher :</label>
+        <select name="maraicher" id="maraicher" required>
+            {% for maraicher in maraichers %}
+                <option value="{{ maraicher.Id_maraicher }}" {% if maraicher.Id_maraicher == production.Id_maraicher %}selected{% endif %}>{{ maraicher.Nom_maraicher }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="surface">Surface cultivée :</label>
+        <input type="number" name="surface" id="surface" value="{{ production.surface_cultivee }}" required>
+        <br>
+        <input type="submit" value="Modifier">
+    </form>
 {% endblock %}
