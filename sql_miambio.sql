@@ -54,7 +54,7 @@ CREATE TABLE recolte(
 CREATE TABLE Vente(
    Id_Vente INT AUTO_INCREMENT,
    Prix_de_vente INT,
-   Quantite_vendue INT,
+   Quantitée_vendue INT,
    Prix_total_de_vente INT,
    Id_Semaine INT NOT NULL,
    Id_produit INT NOT NULL,
@@ -134,7 +134,7 @@ INSERT INTO recolte (Id_recolte, quantite_recoltee, Id_Semaine, Id_produit, Id_M
 (2, 150, 1, 2, 4),
 (3, 75, 2, 3, 3);
 
-INSERT INTO Vente (Prix_de_vente, Quantite_vendue, Prix_total_de_vente, Id_Semaine, Id_produit, Id_marches, Id_Maraicher) VALUES
+INSERT INTO Vente (Prix_de_vente, Quantitée_vendue, Prix_total_de_vente, Id_Semaine, Id_produit, Id_marches, Id_Maraicher) VALUES
 (2, 50, 100, 1, 1, 1, 1),
 (3, 100, 300, 1, 2, 2, 2),
 (1, 30, 30, 2, 3, 3, 3);
