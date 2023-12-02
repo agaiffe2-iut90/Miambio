@@ -1,31 +1,40 @@
-{% extends 'layout.html' %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire produit</title>
+    <!-- Inclure Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}" >
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Modifier un Produit</h1>
+        <p></p>
+        <form action="/produit/edit" method="post">
 
-{% block title %}
-    <title>ajouter un produit</title>
-{% endblock %}
+            <input name="id" value="{{produit.id}}" hidden>
+            <!-- Champ pour saisir le nom du produit -->
+            <div class="mb-3">
+                <label for="lbproduit" class="form-label">Libellé du Produit :</label>
+                <input type="text" class="form-control" value="{{produit.lbproduit}}" id="lbproduit" placeholder="Entrez le nom du produit" required>
+            </div>
+            <!-- Liste déroulante pour sélectionner le groupe du produit -->
+            <div class="mb-3">
+                <label for="Id_categorie_produit" class="form-label">catégorie du Produit :</label>
+                <select class="form-select" id="Id_categorie_produit" name="Id_categorie_produit"required>
+                    {% for categorie in categories %}
+                    <option value="{{categorie.Id_categorie_produit}}">{{categorie.libelle_categorie}}</option>
+                    {% endfor %}}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Editer le Produit</button>
+        </form>
+    </div>
 
-{% block body %}
-  <h2>modifier un produit</h2>
-  <form method="post" action="/produit/edit" >
-    <fieldset>
-        <legend> modifier un  produit</legend>
-        <input type="hidden" name="id" size="18" value="" id="id">
-        
-        
-        <label for="nomproduit">nomproduit</label><br>
-        <select name="nomproduit" required>
-          <option value="1"> Paris SG </option>
-          <option value="2"> Chelsea </option>
-          <option value="3"selected>FC Barcelona </option>
-          </select><br> 
-            
-           
+    <!-- Inclure Bootstrap 5 JS (pour les fonctionnalités supplémentaires) -->
 
-        <label for="villeproduit">villeproduit</label><br>
-        <input type="text" name="villeproduit" size="18" value="" id="villeproduit"><br>
-        <label for="image">image</label><br>
-        <input type="text" name="image" size="18" value="" id="image"><br>
-        <input type="submit" value="modifier" name="modifier" >
-    </fieldset>
-  </form>
-{% endblock %}
+    <!-- Inclure Bootstrap 5 JS (pour les fonctionnalités supplémentaires) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
