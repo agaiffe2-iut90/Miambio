@@ -289,7 +289,104 @@ def delete_recolte():
     print('La recolte avec le numéro '+id + 'a été supprimé')
     return redirect('/recolte/show')
 
+# LES ROUTES DE SIMONE
 
+@app.route('/')
+@app.route('/produit/show')
+def show_produit():
+    mycursor = get_db().cursor()
+    sql='''
+ SELECT  Id_produit AS id,  libelle_produit AS lbproduit, Id_categorie_produit AS cgid
+    FROM Produits
+    ORDER BY id;
+    '''
+    mycursor.execute(sql)
+    produits = mycursor.fetchall()
+    return render_template('produit/show_produit.html', produits=produits)
+
+@app.route('/produit/add', methods=['GET'])
+def add_produit():
+    mycursor = get_db().cursor()
+    sql = '''Select * from categorie_produit'''
+    mycursor.execute(sql)
+    categorie = mycursor.fetchall()
+    return render_template('produit/add_produit.html',categories=categorie)
+
+
+
+@app.route('/produit/add', methods=['POST'])
+def valid_add_produit():
+    print('''ajout du produit dans le tableau''')
+    lbproduit = request.form.get('lbproduit')
+    Id_categorie_produit = request.form.get('Id_categorie_produit')
+    message = u' produit ajouté , lbproduit:' + lbproduit + ' - Id_categorie_produit:' + Id_categorie_produit
+    print(message)
+    mycursor = get_db().cursor()
+    tuple_param=(lbproduit,Id_categorie_produit)
+    sql = "INSERT INTO Produits(libelle_produit,Id_categorie_produit,Id_produit) VALUES (%s,%s,NULL)"
+    mycursor.execute(sql, tuple_param)
+    get_db().commit()
+    return redirect('/produit/show')
+@app.route('/produit/delete')
+def delete_produit():
+    print('''suppression d'un produit''')
+    id = request.args.get('id', None)
+    verifier = []
+    mycursor = get_db().cursor()
+    sql="SELECT * FROM recolte WHERE Id_produit=%s"
+    mycursor.execute(sql, id)
+    verifier+=mycursor.fetchall()
+    sql="SELECT * FROM produit WHERE Id_produit=%s"
+    mycursor.execute(sql, id)
+    verifier+=mycursor.fetchall()
+    sql="SELECT * FROM periode_de_vente WHERE Id_produit=%s"
+    mycursor.execute(sql, id)
+    verifier+=mycursor.fetchall()
+    sql="SELECT * FROM Vente WHERE Id_produit=%s"
+    mycursor.execute(sql, id)
+    verifier+=mycursor.fetchall()
+    print(verifier)
+    if len(verifier) ==0 :
+        sql = "DELETE FROM Produits WHERE Id_produit=%s;"
+        mycursor.execute(sql, id)
+        get_db().commit()
+    else:
+        print("ce n'est pas possible")
+    print(f'''le produit dans le tableau {id} a été supprimer''' )
+    return redirect('/produit/show')
+
+@app.route('/produit/edit', methods=['GET'])
+def edit_produit():
+    print('''affichage du formulaire pour modifier un étudiant''')
+    id=request.args.get('id')
+    mycursor = get_db().cursor()
+
+    sql = '''
+     SELECT  Id_produit AS id,  libelle_produit AS lbproduit, Id_categorie_produit AS cgid
+        FROM Produits
+        WHERE Id_produit = %s
+        '''
+    mycursor.execute(sql,id)
+    produit = mycursor.fetchone()
+    sql='''SELECT * FROM categorie_produit'''
+    mycursor.execute(sql)
+    categories = mycursor.fetchall()
+    return render_template('produit/edit_produit.html', produit=produit ,  categories=categories)
+
+@app.route('/produit/edit', methods=['POST'])
+def valid_edit_produit():
+    print('''affichage du formulaire pour modifier un étudiant''')
+    id=request.form.get('id')
+    categorie = request.form.get('Id_categorie_produit')
+    lbproduit = request.form.get('lbproduit')
+    print(id)
+    print(categorie)
+
+    mycursor = get_db().cursor()
+    sql = '''UPDATE Produits SET libelle_produit=%s , Id_categorie_produit=%s WHERE Id_produit = %s'''
+    mycursor.execute(sql,(lbproduit,categorie,id))
+    get_db().commit()
+    return redirect('/produit/show')
 
 
 
