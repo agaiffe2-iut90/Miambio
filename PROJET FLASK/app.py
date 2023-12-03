@@ -389,6 +389,110 @@ def valid_edit_produit():
     return redirect('/produit/show')
 
 
+# Route de Mickaël
+
+@app.route('/')
+@app.route('/vente/show')
+def show_vente():
+    mycursor = get_db().cursor()
+    sql='''SELECT Id_Vente AS id, Prix_de_vente AS prix, Quantite_vendue AS Quantite_vendue, Prix_total_de_vente AS Prix_total, Id_Semaine AS Semaine, Id_produit AS Produit, Id_marches AS marches, Id_Maraicher AS Maraichers
+    FROM vente
+    ORDER BY Prix_de_vente;'''
+    mycursor.execute(sql)
+    v = mycursor.fetchall()
+    return render_template('vente/show_vente.html', vente=v)
+
+@app.route('/vente/add', methods=['GET'])
+def add_vente():
+    print('Affichage du formulaire pour saisir une vente')
+    return render_template('vente/add_vente.html')
+
+@app.route('/vente/delete')
+def delete_vente():
+    print('''suppression d'une vente''')
+    id=request.args.get('id',0)
+    print(id)
+    mycursor = get_db().cursor()
+    tuple_param=(id)
+    sql = "DELETE FROM vente WHERE Id_Vente = %s;"
+    mycursor.execute(sql, (id,))
+    get_db().commit()
+    print(request.args)
+    print(request.args.get('id'))
+    id=request.args.get('id', 0)
+    return redirect('/vente/show')
+
+@app.route('/vente/edit', methods=['GET'])
+def edit_vente():
+    mycursor = get_db().cursor()
+    print('''affichage du formulaire pour modifier une vente''')
+    print(request.args)
+    print(request.args.get('id'))
+    id = request.args.get('id')
+    sql = '''SELECT Id_Vente AS id, Prix_de_vente AS prix, Quantite_vendue AS Quantite_vendue, Prix_total_de_vente AS Prix_total_de_vente, Id_Semaine AS Semaine, Id_produit AS Produit, Id_marches AS marches, Id_Maraicher AS Maraichers
+    FROM vente
+    WHERE Id_Vente = %s;'''  # Suppression de la virgule après 'id'
+    tuple_param = (id,)  # Ajout de la virgule pour former un tuple avec un seul élément
+    mycursor.execute(sql, tuple_param)  # Utilisation du tuple_param dans execute()
+    liste_ventes = mycursor.fetchone()
+    print(liste_ventes)
+    return render_template('vente/edit_vente.html', vente=liste_ventes)
+
+
+@app.route('/vente/add', methods=['POST'])
+def valid_add_vente():
+    print('Ajout de la vente dans le tableau')
+
+    Prix = request.form.get('Prix')
+    Quantite_vendue = request.form.get('Quantite_vendue')
+    Prix_total_de_vente = request.form.get('Prix_total_de_vente')
+    Semaine = request.form.get('Semaine')
+    produit = request.form.get('produit')
+    marches = request.form.get('marches')
+    Maraichers = request.form.get('Maraichers')
+
+    message = f"Prix total de vente: {Prix_total_de_vente}, Prix de vente: {Prix}, Quantite vendue: {Quantite_vendue}, Semaine: {Semaine}, produit: {produit}, Marché: {marches}, Maraichers: {Maraichers}"
+    print(message)
+
+    mycursor = get_db().cursor()
+    sql = "INSERT INTO vente(Prix_de_vente, Quantite_vendue, Prix_total_de_vente, Id_Semaine, Id_produit, Id_marches, Id_Maraicher) VALUES (%s, %s, %s, %s, %s, %s, %s);"
+    tuple_param = (Prix, Quantite_vendue, Prix_total_de_vente, Semaine, produit, marches, Maraichers)
+    mycursor.execute(sql, tuple_param)
+    get_db().commit()
+
+    return redirect('/vente/show')
+
+@app.route('/vente/edit', methods=['POST'])
+def valid_edit_vente():
+    try:
+        print('Modification de la vente dans le tableau')
+        print(request.form)  # Vérification des données du formulaire à des fins de débogage
+
+        # Récupération des données du formulaire
+        vente_id = request.form.get('id')
+        Prix = request.form.get('Prix')
+        Quantite_vendue = request.form.get('Quantite_vendue')
+        Prix_total_de_vente = request.form.get('Prix_total_de_vente')
+        Semaine = request.form.get('Semaine')
+        produit = request.form.get('produit')
+        marches = request.form.get('marches')
+        Maraichers = request.form.get('Maraichers')
+
+        # Construction du message avec vérification des valeurs None
+        message = f"Prix total de vente: {Prix_total_de_vente if Prix_total_de_vente is not None else 'N/A'}, Prix de vente: {Prix if Prix is not None else 'N/A'}, Quantité vendue: {Quantite_vendue if Quantite_vendue is not None else 'N/A'}, Semaine: {Semaine if Semaine is not None else 'N/A'}, produit: {produit if produit is not None else 'N/A'}, Marché: {marches if marches is not None else 'N/A'}, Maraichers: {Maraichers if Maraichers is not None else 'N/A'}, id: {vente_id if vente_id is not None else 'N/A'}"
+        print(message)
+
+        mycursor = get_db().cursor()
+        tuple_param = (Prix, Quantite_vendue, Prix_total_de_vente, Semaine, produit, marches, Maraichers, vente_id)
+        sql = "UPDATE vente SET Prix_de_vente = %s, Quantite_vendue = %s, Prix_total_de_vente = %s, Id_Semaine = %s, Id_produit = %s, Id_Marche = %s, Id_Maraicher = %s WHERE Id_Vente = %s;"
+
+        mycursor.execute(sql, tuple_param)
+        get_db().commit()
+        return redirect('/vente/show')
+    except Exception as e:
+        print("Error:", str(e))  # Affichage du message d'erreur pour le débogage
+        return "Une erreur s'est produite lors de la modification de la vente."
+
 
 
 
