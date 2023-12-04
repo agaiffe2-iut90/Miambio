@@ -70,10 +70,10 @@ def valid_edit_produit():
 # routes de Nathan
 @app.route('/production/show')
 def show_production():
-
     mycursor = get_db().cursor()
     sql = '''
-    SELECT p.Id_production AS id, pr.Libellé_produit AS nom_produit, m.Nom_maraicher AS nom_maraicher, p.surface_cultivee
+    SELECT p.Id_production AS id, pr.Libellé_produit AS nom_produit, m.Nom_maraicher AS nom_maraicher,
+     p.surface_cultivee
     FROM production p
     JOIN maraichers m ON p.Id_maraicher = m.Id_maraicher
     JOIN produits pr ON p.Id_produit = pr.Id_produit;
@@ -82,6 +82,7 @@ def show_production():
     liste_production = mycursor.fetchall()
 
     return render_template('production/show_production.html', production=liste_production)
+
 
 @app.route('/production/edit', methods=['GET'])
 def show_edit_production_form():
@@ -93,14 +94,14 @@ def show_edit_production_form():
 
     production_id = request.args.get('id', 0)
 
-    produits_sql='''SELECT Id_produit, Libellé_produit FROM produits;'''
+    produits_sql = '''SELECT Id_produit, Libellé_produit FROM produits;'''
     mycursor.execute(produits_sql)
     produits = mycursor.fetchall()
-    maraichers_sql='''SELECT Id_maraicher, Nom_maraicher FROM maraichers;'''
+    maraichers_sql = '''SELECT Id_maraicher, Nom_maraicher FROM maraichers;'''
     mycursor.execute(maraichers_sql)
     maraichers = mycursor.fetchall()
 
-    production_sql='''
+    production_sql = '''
     SELECT Id_production AS id, Id_produit, Id_maraicher, surface_cultivee
     FROM production
     WHERE Id_production = %s;
@@ -108,7 +109,9 @@ def show_edit_production_form():
     mycursor.execute(production_sql, (production_id,))
     liste_production = mycursor.fetchone()
 
-    return render_template('production/edit_production.html', produits=produits, maraichers=maraichers, production=liste_production)
+    return render_template('production/edit_production.html', produits=produits, maraichers=maraichers,
+                           production=liste_production)
+
 
 @app.route('/production/edit', methods=['POST'])
 def edit_production():
@@ -118,7 +121,8 @@ def edit_production():
     produit_id = request.form.get('produit')
     maraicher_id = request.form.get('maraicher')
     surface_cultivee = request.form.get('surface')
-    message='id: ' + production_id + ', produit: ' + produit_id + ', maraicher: ' + maraicher_id + ', surface cultivee: ' + surface_cultivee
+    message = ('id: ' + production_id + ', produit: ' + produit_id + ', maraicher: ' + maraicher_id +
+               ', surface cultivee: ' + surface_cultivee)
     print(message)
 
     mycursor = get_db().cursor()
@@ -132,6 +136,7 @@ def edit_production():
     get_db().commit()
 
     return redirect('/production/show')
+
 
 @app.route('/production/delete')
 def delete_production():
@@ -150,20 +155,22 @@ def delete_production():
 
     return redirect('/production/show')
 
+
 @app.route('/production/add', methods=['GET'])
 def add_production_form():
     print("affichage du formulaire d'ajout d'une production")
 
     mycursor = get_db().cursor()
 
-    produit_sql='''SELECT Id_produit, Libellé_produit FROM produits;'''
+    produit_sql = '''SELECT Id_produit, Libellé_produit FROM produits;'''
     mycursor.execute(produit_sql)
     produits = mycursor.fetchall()
-    maraicher_sql='''SELECT Id_maraicher, Nom_maraicher FROM maraichers;'''
+    maraicher_sql = '''SELECT Id_maraicher, Nom_maraicher FROM maraichers;'''
     mycursor.execute(maraicher_sql)
     maraichers = mycursor.fetchall()
 
     return render_template('production/add_production.html', produits=produits, maraichers=maraichers)
+
 
 @app.route('/production/add', methods=['POST'])
 def add_production():
@@ -172,7 +179,7 @@ def add_production():
     produit_id = request.form.get('produit')
     maraicher_id = request.form.get('maraicher')
     surface_cultivee = request.form.get('surface')
-    message='produit: ' + produit_id + ', maraicher: ' + maraicher_id + ', surface cultivee: ' + surface_cultivee
+    message = 'produit: ' + produit_id + ', maraicher: ' + maraicher_id + ', surface cultivee: ' + surface_cultivee
     print(message)
 
     mycursor = get_db().cursor()
@@ -182,6 +189,44 @@ def add_production():
     get_db().commit()
 
     return redirect('/production/show')
+
+
+@app.route('/production/etat')
+def show_production_state():
+    mycursor = get_db().cursor()
+
+    # État 1: Nombre de maraîchers par produit
+    sql_nombre_maraichers_produit = '''
+        SELECT produits.Libellé_produit AS produit, COUNT(DISTINCT maraichers.Id_maraicher) AS nombre_maraichers
+        FROM production
+        JOIN maraichers ON production.Id_maraicher = maraichers.Id_maraicher
+        JOIN produits ON production.Id_produit = produits.Id_produit
+        GROUP BY produits.Libellé_produit;'''
+    mycursor.execute(sql_nombre_maraichers_produit)
+    etat_maraichers = mycursor.fetchall()
+
+    # État 2: Surface totale de production par produit
+    sql_surface_totale_production_produit = '''
+        SELECT produits.Libellé_produit AS produit, SUM(production.surface_cultivee) AS surface_totale
+        FROM production
+        JOIN produits ON production.Id_produit = produits.Id_produit
+        GROUP BY produits.Libellé_produit;'''
+    mycursor.execute(sql_surface_totale_production_produit)
+    etat_surface_totale = mycursor.fetchall()
+
+    sql_surface_par_maraicher = '''
+        SELECT production.Id_maraicher, maraichers.Nom_maraicher AS maraicher,
+        SUM(production.surface_cultivee) AS surface_totale
+        FROM production
+        JOIN maraichers ON production.Id_maraicher = maraichers.Id_maraicher
+        GROUP BY production.Id_maraicher, maraichers.Nom_maraicher;
+        '''
+    mycursor.execute(sql_surface_par_maraicher)
+    etat_surface_par_maraicher = mycursor.fetchall()
+
+    return render_template('production/etat_production.html', etat_maraichers=etat_maraichers,
+                           etat_surface_totale=etat_surface_totale,
+                           etat_surface_par_maraicher=etat_surface_par_maraicher)
 
 # ROUTES D'ANNA
 
