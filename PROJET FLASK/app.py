@@ -72,11 +72,11 @@ def valid_edit_produit():
 def show_production():
     mycursor = get_db().cursor()
     sql = '''
-    SELECT p.Id_production AS id, pr.Libellé_produit AS nom_produit, m.Nom_maraicher AS nom_maraicher,
-     p.surface_cultivee
-    FROM production p
-    JOIN maraichers m ON p.Id_maraicher = m.Id_maraicher
-    JOIN produits pr ON p.Id_produit = pr.Id_produit;
+    SELECT production.Id_production, produits.Libellé_produit, maraichers.Nom_maraicher,
+     production.surface_cultivee
+    FROM production
+    JOIN maraichers ON production.Id_maraicher = maraichers.Id_maraicher
+    JOIN produits ON production.Id_produit = produits.Id_produit;
     '''
     mycursor.execute(sql)
     liste_production = mycursor.fetchall()
