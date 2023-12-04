@@ -395,17 +395,32 @@ def valid_edit_produit():
 @app.route('/vente/show')
 def show_vente():
     mycursor = get_db().cursor()
-    sql='''SELECT Id_Vente AS id, Prix_de_vente AS prix, Quantite_vendue AS Quantite_vendue, Prix_total_de_vente AS Prix_total, Id_Semaine AS Semaine, Id_produit AS Produit, Id_marches AS marches, Id_Maraicher AS Maraichers
+    sql='''SELECT id_Vente AS id, Prix_de_vente AS prix, Quantitée_vendue AS Quantitée_vendue, Prix_total_de_vente AS Prix_total, id_Semaine AS Semaine, id_produit AS produit, id_Marché AS Marché, id_Maraicher AS Maraichers
     FROM vente
     ORDER BY Prix_de_vente;'''
     mycursor.execute(sql)
-    v = mycursor.fetchall()
-    return render_template('vente/show_vente.html', vente=v)
+    liste_ventes = mycursor.fetchall()
+    return render_template('vente/show_vente.html', vente=liste_ventes)
 
 @app.route('/vente/add', methods=['GET'])
 def add_vente():
     print('Affichage du formulaire pour saisir une vente')
-    return render_template('vente/add_vente.html')
+    mycursor = get_db().cursor()
+    # Assuming you have a query to fetch products from the database
+    Semaine_sql='''SELECT * FROM Semaine'''
+    mycursor.execute(Semaine_sql)
+    Semaine = mycursor.fetchall()
+    produits_sql = '''SELECT * FROM Produits;'''
+    mycursor.execute(produits_sql)
+    products = mycursor.fetchall()
+    Marché_sql='''SELECT * FROM Marché;'''
+    mycursor.execute(Marché_sql)
+    Marché = mycursor.fetchall()
+    maraichers_sql='''SELECT * FROM maraichers;'''
+    mycursor.execute(maraichers_sql)
+    Maraichers = mycursor.fetchall()
+
+    return render_template('vente/add_vente.html', produits=products, Maraichers=Maraichers, Semaines=Semaine, Marché=Marché)
 
 @app.route('/vente/delete')
 def delete_vente():
@@ -429,14 +444,27 @@ def edit_vente():
     print(request.args)
     print(request.args.get('id'))
     id = request.args.get('id')
-    sql = '''SELECT Id_Vente AS id, Prix_de_vente AS prix, Quantite_vendue AS Quantite_vendue, Prix_total_de_vente AS Prix_total_de_vente, Id_Semaine AS Semaine, Id_produit AS Produit, Id_marches AS marches, Id_Maraicher AS Maraichers
+    Semaine_sql='''SELECT * FROM Semaine'''
+    mycursor.execute(Semaine_sql)
+    Semaine = mycursor.fetchall()
+    produits_sql = '''SELECT * FROM Produits;'''
+    mycursor.execute(produits_sql)
+    products = mycursor.fetchall()
+    Marché_sql='''SELECT * FROM Marché;'''
+    mycursor.execute(Marché_sql)
+    Marché = mycursor.fetchall()
+    maraichers_sql='''SELECT * FROM maraichers;'''
+    mycursor.execute(maraichers_sql)
+    Maraichers = mycursor.fetchall()
+    sql = '''SELECT id_Vente AS id, Prix_de_vente AS prix, Quantitée_vendue AS Quantitée_vendue, Prix_total_de_vente AS Prix_total_de_vente, id_Semaine AS Semaine, id_produit AS Produit, id_Marché AS Marché, id_Maraicher AS Maraichers
     FROM vente
-    WHERE Id_Vente = %s;'''  # Suppression de la virgule après 'id'
+    WHERE id_Vente = %s;'''  # Suppression de la virgule après 'id'
     tuple_param = (id,)  # Ajout de la virgule pour former un tuple avec un seul élément
     mycursor.execute(sql, tuple_param)  # Utilisation du tuple_param dans execute()
     liste_ventes = mycursor.fetchone()
     print(liste_ventes)
-    return render_template('vente/edit_vente.html', vente=liste_ventes)
+
+    return render_template('vente/edit_vente.html', vente=liste_ventes, Semaines=Semaine, produits=products, Marché=Marché, Maraichers=Maraichers)
 
 
 @app.route('/vente/add', methods=['POST'])
@@ -444,19 +472,19 @@ def valid_add_vente():
     print('Ajout de la vente dans le tableau')
 
     Prix = request.form.get('Prix')
-    Quantite_vendue = request.form.get('Quantite_vendue')
+    Quantitée_vendue = request.form.get('Quantitée_vendue')
     Prix_total_de_vente = request.form.get('Prix_total_de_vente')
     Semaine = request.form.get('Semaine')
     produit = request.form.get('produit')
-    marches = request.form.get('marches')
+    Marché = request.form.get('Marché')
     Maraichers = request.form.get('Maraichers')
 
-    message = f"Prix total de vente: {Prix_total_de_vente}, Prix de vente: {Prix}, Quantite vendue: {Quantite_vendue}, Semaine: {Semaine}, produit: {produit}, Marché: {marches}, Maraichers: {Maraichers}"
+    message = f"Prix total de vente: {Prix_total_de_vente}, Prix de vente: {Prix}, Quantite vendue: {Quantitée_vendue}, Semaine: {Semaine}, produit: {produit}, Marché: {Marché}, Maraichers: {Maraichers}"
     print(message)
 
     mycursor = get_db().cursor()
-    sql = "INSERT INTO vente(Prix_de_vente, Quantite_vendue, Prix_total_de_vente, Id_Semaine, Id_produit, Id_marches, Id_Maraicher) VALUES (%s, %s, %s, %s, %s, %s, %s);"
-    tuple_param = (Prix, Quantite_vendue, Prix_total_de_vente, Semaine, produit, marches, Maraichers)
+    sql = "INSERT INTO vente(Prix_de_vente, Quantitée_vendue, Prix_total_de_vente, id_Semaine, id_produit, id_Marché, id_Maraicher) VALUES (%s, %s, %s, %s, %s, %s, %s);"
+    tuple_param = (Prix, Quantitée_vendue, Prix_total_de_vente, Semaine, produit, Marché, Maraichers)
     mycursor.execute(sql, tuple_param)
     get_db().commit()
 
@@ -469,22 +497,22 @@ def valid_edit_vente():
         print(request.form)  # Vérification des données du formulaire à des fins de débogage
 
         # Récupération des données du formulaire
-        vente_id = request.form.get('id')
+        id = request.form.get('id')
         Prix = request.form.get('Prix')
-        Quantite_vendue = request.form.get('Quantite_vendue')
+        Quantitée_vendue = request.form.get('Quantitée_vendue')
         Prix_total_de_vente = request.form.get('Prix_total_de_vente')
         Semaine = request.form.get('Semaine')
         produit = request.form.get('produit')
-        marches = request.form.get('marches')
+        Marché = request.form.get('Marché')
         Maraichers = request.form.get('Maraichers')
 
         # Construction du message avec vérification des valeurs None
-        message = f"Prix total de vente: {Prix_total_de_vente if Prix_total_de_vente is not None else 'N/A'}, Prix de vente: {Prix if Prix is not None else 'N/A'}, Quantité vendue: {Quantite_vendue if Quantite_vendue is not None else 'N/A'}, Semaine: {Semaine if Semaine is not None else 'N/A'}, produit: {produit if produit is not None else 'N/A'}, Marché: {marches if marches is not None else 'N/A'}, Maraichers: {Maraichers if Maraichers is not None else 'N/A'}, id: {vente_id if vente_id is not None else 'N/A'}"
+        message = f"Prix total de vente: {Prix_total_de_vente if Prix_total_de_vente is not None else 'N/A'}, Prix de vente: {Prix if Prix is not None else 'N/A'}, Quantité vendue: {Quantitée_vendue if Quantitée_vendue is not None else 'N/A'}, Semaine: {Semaine if Semaine is not None else 'N/A'}, produit: {produit if produit is not None else 'N/A'}, Marché: {Marché if Marché is not None else 'N/A'}, Maraichers: {Maraichers if Maraichers is not None else 'N/A'}, id: {id if id is not None else 'N/A'}"
         print(message)
 
         mycursor = get_db().cursor()
-        tuple_param = (Prix, Quantite_vendue, Prix_total_de_vente, Semaine, produit, marches, Maraichers, vente_id)
-        sql = "UPDATE vente SET Prix_de_vente = %s, Quantite_vendue = %s, Prix_total_de_vente = %s, Id_Semaine = %s, Id_produit = %s, Id_Marche = %s, Id_Maraicher = %s WHERE Id_Vente = %s;"
+        tuple_param = (Prix, Quantitée_vendue, Prix_total_de_vente, Semaine, produit, Marché, Maraichers, id)
+        sql = "UPDATE vente SET Prix_de_vente = %s, Quantitée_vendue = %s, Prix_total_de_vente = %s, id_Semaine = %s, id_produit = %s, id_Marché = %s, id_Maraicher = %s WHERE Id_Vente = %s;"
 
         mycursor.execute(sql, tuple_param)
         get_db().commit()
@@ -495,11 +523,8 @@ def valid_edit_vente():
 
 
 
-
-
-
-
-
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
 
 
 
