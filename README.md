@@ -16,10 +16,10 @@ Et enfin vous pourrez lancer l'application avec `/bin/bash launcher.sh`.
 
 ## Développement:
 
-- Anna GAIFFE
-- Nathan PONTHIEU
-- Simone-désirée ZIGGAR
-- Mickaël MARCO
+- [Anna GAIFFE](https://github.com/agaiffe2-iut90)
+- [Nathan PONTHIEU](https://github.com/nponthie-iut90)
+- [Simone-désirée ZIGGAR](https://github.com/sdziggar-iut90)
+- [Mickaël MARCO](https://github.com/mmarco-iut90)
 
 ## Statut du projet
 
