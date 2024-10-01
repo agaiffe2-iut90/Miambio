@@ -7,12 +7,14 @@
 {% block body %}
 
 <body>
-    <div class="container mt-4">
-        <h1>Modifier une récolte </h1>
+ <h1 class="text-center mt-5">Modifier une récolte</h1>
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <hr class="my-4 rounded" style="height: 4px; background-color: darkgreen; ">
+        </div>
+    </div>
         <form action="/recolte/edit" method="post">
-
-            <legend> Modifier une récolte </legend>
-                <br>
+            <div class="container">
 
             <input type="text" value="{{recolte.id}}" hidden name="id">
 
@@ -22,33 +24,33 @@
 
             <br>
             <label for="Id_Semaine"> Semaine n° :</label><br>
-            <select name="Id_Semaine" id="Id_Semaine" required>
+            <select class="form-select" name="Id_Semaine" id="Id_Semaine" required>
                 <option value="" >Numéro de semaine</option>
                 {% for semaine in semaines%}
-                <option value="{{semaine.Id_Semaine}}" {%if semaine.Id_Semaine == recolte.semaine %} selected {% endif %} >{{semaine.Id_Semaine}}</option>
+                    <option value="{{semaine.id_semaine}}" {% if semaine.id_semaine == recolte.semaine %} selected {% endif %} >{{ semaine.id_semaine }}</option>
                 {% endfor %}
             </select>
 
             <br>
                 <label for="Id_produit"> Produit récolté :</label><br>
-                <select name="Id_produit" id="Id_produit" required>
+                <select class="form-select" name="Id_produit" id="Id_produit" required>
                     <option value="">Produit...</option>
                     {% for produit in produits %}
-                    <option value="{{produit.Id_produit}}" {%if produit.Id_produit == recolte.id_produit %} selected {% endif %}>{{produit.libelle_produit}}</option>
+                    <option value="{{produit.id_produit}}" {%if produit.id_produit == recolte.id_produit %} selected {% endif %}>{{ produit.libelle_produit }}</option>
                     {% endfor %}
                 </select>
 
                 <br>
              <label for="Id_Maraicher"> Récoltée par :</label><br>
-            <select name="Id_Maraicher" id="Id_Maraicher" required>
+            <select class="form-select" name="Id_Maraicher" id="Id_Maraicher" required>
                 <option value="">Sélectionner un maraicher</option>
                 {% for maraicher in maraichers%}
-                    <option value="{{maraicher.Id_Maraicher}}" {% if maraicher.Id_Maraicher == recolte.id_maraicher %}selected{% endif %}>{{maraicher.Nom_maraicher}}</option>
+                    <option value="{{maraicher.id_maraicher}}" {% if maraicher.id_maraicher == recolte.id_maraicher %}selected{% endif %}>{{maraicher.nom_maraicher}}</option>
                 {%endfor%}
             </select>
-
-            <button >Valider</button>
-            <a href="/recolte/show">Annuler</a>
+                <br>
+             <button type="submit" class="btn btn-success">Editer la récolte</button>
+            <a class="btn btn-danger" href="/recolte/show">Annuler</a>
         </form>
 
 

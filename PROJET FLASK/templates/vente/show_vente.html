@@ -5,40 +5,37 @@
     {% endblock %}
 
 {% block body %}
-
-<h1>Liste des ventes <img src="{{ url_for('static', filename='image_iut.jpeg') }}" alt="image iut" /></h1>
-
-<a href="/vente/add">Ajouter une vente</a>
+    <h1 class="text-center mt-5">Vente</h1>
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <hr class="my-4 rounded" style="height: 4px; background-color: darkgreen; ">
+        </div>
+    </div>
+    <div class="container">
+        <a class="btn btn-primary m-lg-2" href="/vente/add">Ajouter une vente</a>
 
 {% if vente|length >= 1 %}
-    <table>
+    <table class="table table-dark table-striped">
         <thead class="thead-dark">
             <tr>
-                <th>id</th><th>Prix de vente</th><th>Quantité vendue</th><th>Prix total de vente</th><th>Semaine</th><th>Produit</th><th>Marché</th><th>Maraîcher</th><th>Image</th><th>Actions</th>
+                <th>id</th><th>Prix de vente</th><th>Quantité vendue</th><th>Prix total de vente</th><th>Semaine</th><th>Produit</th><th>Marché</th><th>Maraîcher</th><th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% if vente|length >= 1 %}
             {% for v in vente %}
                 <tr>
-                    <td>{{ v.id }}</td>
-                    <td>{{ v.Prix_de_vente }}</td>
-                    <td>{{ v.Quantitée_vendue }}</td>
-                    <td>{{ v.Prix_total_de_vente }}</td>
-                    <td>{{ v.Semaine }}</td>
-                    <td>{{ v.produit }}</td>
-                    <td>{{ v.marches }}</td>
-                    <td>{{ v.Maraichers }}</td>
+                    <td>{{ v.id_vente }}</td>
+                    <td>{{ v.prix_de_vente }}</td>
+                    <td>{{ v.quantitee_vendue }}</td>
+                    <td>{{ v.prix_total_de_vente }}</td>
+                    <td>{{ v.id_semaine }}</td>
+                    <td>{{ v.id_produit }}</td>
+                    <td>{{ v.id_marche }}</td>
+                    <td>{{ v.id_maraicher }}</td>
                     <td>
-                        {% if v.image %}
-                            <img style="width:40px;height:40px" src="{{ url_for('static', filename='images/' + v.image) }}" alt="image de {{ v.nom }}">
-                        {% else %}
-                            Aucune image
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="/vente/edit?id={{ v.id }}">Éditer</a>&nbsp;
-                        <a href="/vente/delete?id={{ v.id }}">Supprimer</a>
+                        <a class="btn btn-warning" href="/vente/edit?id={{ v.id_vente }}">Éditer</a>&nbsp;
+                        <a class="btn btn-danger" href="/vente/delete?id={{ v.id_vente }}">Supprimer</a>
                     </td>
                 </tr>
             {% endfor %}

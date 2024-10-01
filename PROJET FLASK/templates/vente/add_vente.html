@@ -6,59 +6,66 @@
 
 {% block body %}
 <body>
-    <div class="container mt-4">
-        <h1>Formulaire de vente</h1>
+       <h1 class="text-center mt-5">Ajouter une vente</h1>
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <hr class="my-4 rounded" style="height: 4px; background-color: darkgreen; ">
+        </div>
+    </div>
+    <div class="container">
         <form action="/vente/add" method="post">
             <!-- Champs pour saisir les informations de la vente -->
             <div class="mb-3">
-                <label for="Prix">Prix</label>
-                <input id="Prix" type="text" name="Prix" size="18" placeholder="Saisir le prix de vente">
+                <label class="form-label" for="Prix">Prix</label>
+                <input class="form-control" id="Prix" type="text" name="Prix" size="18" placeholder="Saisir le prix de vente">
             </div>
             <div class="mb-3">
-                <label for="Quantitée_vendue">Quantité vendue</label>
-                <input id="Quantitée_vendue" type="text" name="Quantitée_vendue" size="18" placeholder="Saisir la quantité vendue">
+                <label class="form-label" for="Quantitée_vendue">Quantité vendue</label>
+                <input class="form-control" id="Quantitée_vendue" type="text" name="Quantitée_vendue" size="18" placeholder="Saisir la quantité vendue">
             </div>
             <div class="mb-3">
-                <label for="Prix_total_de_vente">Prix total de vente</label>
-                <input id="Prix_total_de_vente" type="text" name="Prix_total_de_vente" size="18" placeholder="Saisir le prix total de vente">
+                <label class="form-label" for="Prix_total_de_vente">Prix total de vente</label>
+                <input class="form-control" id="Prix_total_de_vente" type="text" name="Prix_total_de_vente" size="18" placeholder="Saisir le prix total de vente">
             </div>
             <div class="mb-3">
-                <label for="Semaine"> Semaine n° :</label><br>
-                <select name="Semaine" id="Semaine" required>
+                <label class="form-label" for="Id_Semaine"> Semaine n° :</label><br>
+                <select class="form-select" name="Id_Semaine" id="Id_Semaine" required>
                     <option value="">Numéro de semaine</option>
-                    {% for semaine in semaines%}
-                        <option value="{{semaine.Id_Semaine}}">{{semaine.Id_Semaine}}</option>
+                    {% for semaine in semaines %}
+                        <option value="{{ semaine.id_semaine }}">{{ semaine.id_semaine }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="mb-3">
-                <label for="produit">Produit :</label>
-                <select name="produit" id="produit" required>
-                    <option value="" selected>Sélectionner le produit</option>
+                <label class="form-label" for="Id_produit"> Produit récolté :</label><br>
+                <select class="form-select" name="Id_produit" id="Id_produit" required>
+                    <option value="">Produit...</option>
                     {% for produit in produits %}
-                        <option value="{{ produit.Id_produit }}">{{ produit.Libellé_produit }}</option>
+                        <option value="{{ produit.id_produit }}">{{ produit.libelle_produit }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="mb-3">
-                <label for="marches">Marché :</label>
-                <select name="marches" id="marches" required>
-                    <option value="" selected>Sélectionner le produit</option>
-                    {% for marches in marches %}
-                        <option value="{{ marches.Id_marches }}">{{ marches.Date_marche }}</option>
+                <label class="form-label" for="Id_marches">Marché :</label>
+                <select class="form-select" name="Id_marches" id="Id_marches">
+                    <option value="">Marché...</option>
+                    {% for marche in marches %}
+                        <option value="{{ marche.id_marche }}">{{ marche.id_marche }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="mb-3">
-                <label for="maraicher">Maraîcher :</label>
-                <select name="maraicher" id="maraicher" required>
-                    <option value="" selected>Sélectionner le maraicher</option>
+                <label class="form-label" for="Id_Maraicher">Maraîcher :</label>
+                <select class="form-select" name="Id_Maraicher" id="Id_Maraicher" required>
+                    <option value="">Sélectionner un maraicher</option>
                     {% for maraicher in maraichers %}
-                        <option value="{{ maraicher.Id_maraicher }}">{{ maraicher.Nom_maraicher }}</option>
-                    {% endfor %}
-                </select>
+                        <option value="{{ maraicher.id_maraicher }}">{{ maraicher.nom_maraicher }}</option>
+                {% endfor%}
+            </select>
             </div>
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <button type="submit" class="btn btn-success">Enregistrer</button>
+                    <a class="btn btn-danger" href="/vente/show">Annuler</a>
+
         </form>
     </div>
 

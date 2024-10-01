@@ -6,47 +6,43 @@
 
 {% block body %}
     <h1 class="text-center mt-5">État de la production</h1>
-    <hr class="barre opacity-100">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <hr class="my-4 rounded" style="height: 4px; background-color: darkgreen; ">
+        </div>
+    </div>
 
-    <h2 class="mt-4">Nombre de maraîchers par produit :</h2>
-    <table class="table table-dark table-striped">
-        <tr>
-            <th>Produit</th>
-            <th>Nombre de Maraîchers</th>
-        </tr>
-        {% for etat in etat_maraichers %}
+    <div class="container">
+        <h2 class="mt-4">Surface totale de production par produit :</h2>
+        <table class="table table-dark table-striped">
+          <thead class="thead-dark">
             <tr>
-                <td>{{ etat.produit }}</td>
-                <td>{{ etat.nombre_maraichers }}</td>
+                <th>Produit</th>
+                <th>Surface Totale</th>
             </tr>
-        {% endfor %}
-    </table>
+            </thead>
+            {% for etat in etat_surface_totale %}
+                <tr>
+                    <td>{{ etat.produit }}</td>
+                    <td>{{ etat.surface_totale }}</td>
+                </tr>
+            {% endfor %}
+        </table>
 
-    <h2 class="mt-4">Surface totale de production par produit :</h2>
-    <table class="table table-dark table-striped">
-        <tr>
-            <th>Produit</th>
-            <th>Surface Totale</th>
-        </tr>
-        {% for etat in etat_surface_totale %}
+        <h2 class="mt-4">Surface totale cultivée par chaque maraîcher :</h2>
+        <table class="table table-dark table-striped">
+            <thead class="thead-dark">
             <tr>
-                <td>{{ etat.produit }}</td>
-                <td>{{ etat.surface_totale }}</td>
+                <th>Maraîcher</th>
+                <th>Surface Totale Cultivée</th>
             </tr>
-        {% endfor %}
-    </table>
-
-    <h2 class="mt-4">Surface totale cultivée par chaque maraîcher :</h2>
-    <table class="table table-dark table-striped">
-        <tr>
-            <th>Maraîcher</th>
-            <th>Surface Totale Cultivée</th>
-        </tr>
-        {% for etat in etat_surface_par_maraicher %}
-            <tr>
-                <td>{{ etat.maraicher }}</td>
-                <td>{{ etat.surface_totale }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+            </thead>
+            {% for etat in etat_surface_par_maraicher %}
+                <tr>
+                    <td>{{ etat.maraicher }}</td>
+                    <td>{{ etat.surface_totale }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}
