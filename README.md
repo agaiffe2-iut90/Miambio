@@ -18,7 +18,7 @@ cd Miambio
 ```
 
 2. Configurer la base de donnée
-    - Exécuter le fichier [sql_miambio.sql](sql_miambio.sql) dans une base de données SQL
+    - Exécuter le fichier [sql_miambio.sql](sql_miambio.sql) dans une base de données MySQL
     - Changer les informations de connexion à la base de données dans le fichier [app.py](projet_flask/app.py)
 
 3. Activer l'environnement virtuel
@@ -45,4 +45,4 @@ Une fois lancé, le site permet de consulter, ajouter, modifier et supprimer des
 
 ## Statut du projet
 
-Le projet est terminé, il a lieu de octobre à novembre 2023.
+Le projet est terminé, il a eu lieu de octobre à novembre 2023.
